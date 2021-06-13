@@ -4,9 +4,7 @@ use std::io::BufRead;
 fn main() {
     let quote = "\x1b[0;32m@\x1b[0m".replace("@", r#"""#);
     
-    let stdin = io::stdin();
-
-    for line in stdin.lock().lines() {
+    for line in io::stdin().lock().lines() {
         let line = line.expect("Could not read line from standard in");
 
         let new_line = line.replace(r#"""#, &*quote);
