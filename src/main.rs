@@ -48,9 +48,7 @@ fn main() {
                 let s = get_symbols(&*conf.substrings[k]).unwrap();
                 line = line.replace(k, &*format!("{}{}{}", s.0, k, s.1));
             }
-            println!("{}", line);
-        } else {
-            println!("{}", line);
         }
+        println!("{}", line);
     }
 }
