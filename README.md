@@ -1,6 +1,6 @@
 # Colorizer  
 
-**this is a program to color any word in the input file**  
+**it is a program for coloring any word in the input file displayed in your terminal**  
 
 ## How to get and compile  
 ```
