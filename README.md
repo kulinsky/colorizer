@@ -1,8 +1,8 @@
-#Colorizer
+#Colorizer  
 
-**this is a program to color any word in the input file**
+**this is a program to color any word in the input file**  
 
-##How to get and compile
+##How to get and compile  
 ```
 git clone https://github.com/kulinsky/colorizer
 cd colorizer
