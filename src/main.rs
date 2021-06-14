@@ -41,17 +41,14 @@ fn main() {
     let conf = Config::automatic().unwrap();
 
     for line in io::stdin().lock().lines() {
-        let line = line.expect("Could not read line from standard in");
+        let mut line = line.expect("Could not read line from standard in");
 
         if conf.substrings.len() > 0 {
-            let mut new_line = line;
-
             for k in conf.substrings.keys() {
                 let s = get_symbols(&*conf.substrings[k]).unwrap();
-                new_line = new_line.replace(k, &*format!("{}{}{}", s.0, k, s.1));
+                line = line.replace(k, &*format!("{}{}{}", s.0, k, s.1));
             }
-
-            println!("{}", new_line);
+            println!("{}", line);
         } else {
             println!("{}", line);
         }
