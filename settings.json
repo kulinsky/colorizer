@@ -1,8 +1,10 @@
 {
   "substrings": {
     "info": "GREEN",
-    "null": "RED",
+    "null": "CYAN",
     "debug": "BLUE",
-    "error": "RED"
+    "error": "RED",
+    "time": "YELLOW",
+    "message": "PURPLE"
   }
 }

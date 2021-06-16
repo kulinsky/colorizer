@@ -4,6 +4,7 @@ use std::io::{BufRead, Read};
 use serde::Deserialize;
 use std::fs::File;
 use std::collections::HashMap;
+use ansi_term::Colour::{Blue, Cyan, Yellow, Red, Green, Purple};
 
 #[derive(Debug, Deserialize)]
 struct Config {
@@ -28,11 +29,14 @@ impl Config {
     }
 }
 
-fn get_symbols(color: &str) -> Result<(&str, &str), &'static str> {
+fn colorize(color: &str, word: &str) -> Result<String, &'static str> {
     match color {
-        "GREEN" => Ok(("\x1b[0;32m", "\x1b[0m")),
-        "RED" => Ok(("\x1b[0;31m", "\x1b[0m")),
-        "BLUE" => Ok(("\x1b[0;34m", "\x1b[0m")),
+        "RED" => Ok(Red.paint(word).to_string()),
+        "GREEN" => Ok(Green.paint(word).to_string()),
+        "BLUE" => Ok(Blue.paint(word).to_string()),
+        "CYAN" => Ok(Cyan.paint(word).to_string()),
+        "YELLOW" => Ok(Yellow.paint(word).to_string()),
+        "PURPLE" => Ok(Purple.paint(word).to_string()),
         _ => Err("unknown color ")
     }
 }
@@ -44,8 +48,7 @@ fn main() {
         let mut line = line.expect("Could not read line from standard in");
 
         for k in conf.substrings.keys() {
-            let s = get_symbols(&*conf.substrings[k]).unwrap();
-            line = line.replace(k, &*format!("{}{}{}", s.0, k, s.1));
+            line = line.replace(k, &*colorize(&*conf.substrings[k], k).unwrap())
         }
 
         println!("{}", line);
