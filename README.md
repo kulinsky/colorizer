@@ -13,10 +13,19 @@ cargo build --release
 create a settings.json file and add a "substring" key which is a hash map of "word: color" like this:
 ```
 {
-  "substrings": {
-    "info": "GREEN",
-    "debug": "BLUE",
-    "error": "RED"
+  "default": {
+    "substrings": {
+      "info": "GREEN",
+      "debug": "BLUE",
+      "error": "RED"
+    }
+  },
+  "profile1": {
+    "substrings": {
+      "null": "CYAN",
+      "time": "YELLOW",
+      "message": "PURPLE"
+    }
   }
 }
 ```
@@ -24,5 +33,5 @@ example is in the repository
 
 **now run the application**
 ```
-cat server.log | ./target/release/colorizer settings.json
+cat server.log | ./target/release/colorizer --config settings.json --profile profile1
 ```
