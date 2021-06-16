@@ -1,10 +1,16 @@
 {
-  "substrings": {
-    "info": "GREEN",
-    "null": "CYAN",
-    "debug": "BLUE",
-    "error": "RED",
-    "time": "YELLOW",
-    "message": "PURPLE"
+  "default": {
+    "substrings": {
+      "info": "GREEN",
+      "debug": "BLUE",
+      "error": "RED"
+    }
+  },
+  "logs": {
+    "substrings": {
+      "null": "CYAN",
+      "time": "YELLOW",
+      "message": "PURPLE"
+    }
   }
 }

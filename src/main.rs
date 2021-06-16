@@ -1,10 +1,25 @@
-use std::{io, env};
-use std::io::{BufRead, Read};
-
-use serde::Deserialize;
+use std::io;
 use std::fs::File;
 use std::collections::HashMap;
+use std::io::{BufRead, Read};
+
+use clap::Clap;
+use serde::Deserialize;
+use serde_json::{Map, Value};
 use ansi_term::Colour::{Blue, Cyan, Yellow, Red, Green, Purple};
+
+/// Simple program to colorize any word
+#[derive(Clap, Debug)]
+#[clap(name = "colorizer", version = "0.1.0")]
+struct CliConfig {
+    /// Path to config.json file
+    #[clap(short, long,  default_value = "~/.colorizer/settings.json")]
+    config: String,
+
+    /// Profile from config to use
+    #[clap(short, long, default_value = "default")]
+    profile: String,
+}
 
 #[derive(Debug, Deserialize)]
 struct Config {
@@ -13,19 +28,21 @@ struct Config {
 
 impl Config {
     fn automatic() -> Result<Config, &'static str> {
-        let args: Vec<String> = env::args().collect();
+        let args = CliConfig::parse();
 
-        if args.len() < 2 {
-            return Err("not enough arguments");
-        }
-
-        let filename = args[1].clone();
-
-        let mut file = File::open(filename).unwrap();
+        let mut file = File::open(args.config).unwrap();
         let mut buff = String::new();
         file.read_to_string(&mut buff).unwrap();
 
-        Ok(serde_json::from_str(&buff).unwrap())
+        let parsed: Value = serde_json::from_str(&buff).unwrap();
+        let obj: &Map<String, Value> = parsed.as_object().unwrap();
+
+        if obj.contains_key(&*args.profile) {
+            let val = obj.get(&*args.profile).unwrap().clone();
+            return Ok(serde_json::from_value(val).unwrap())
+        }
+
+        return Err("profile not found");
     }
 }
 
