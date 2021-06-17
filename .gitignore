@@ -1,2 +1,4 @@
 .idea
 target
+example.log
+.DS_Store
