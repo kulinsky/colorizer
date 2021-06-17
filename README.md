@@ -6,7 +6,7 @@ https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-99
 
 ## Quickstart
 1. Download and change [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  
-2. Install colorizer and go
+2. Install colorizer and run
 ```
 cargo install colorizer
 cat server.log | colorizer --config settings.json --profile profile1
