@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::io::{BufRead, Read, Write};
 
 use clap::Clap;
+use regex::Regex;
 use serde::Deserialize;
 use serde_json::{Map, Value};
 use anyhow::{anyhow, Context, Result};
@@ -24,7 +25,8 @@ struct CliConfig {
 
 #[derive(Debug, Deserialize)]
 struct Config {
-    substrings: HashMap<String, String>,
+    substrings: Option<HashMap<String, String>>,
+    regex: Option<HashMap<String, String>>,
 }
 
 impl Config {
@@ -68,11 +70,36 @@ fn main() -> Result<()> {
     let stdout = io::stdout();
     let mut buff = io::BufWriter::new(stdout.lock());
 
+    let mut substrings: HashMap<String, String> = HashMap::new();
+    let mut color_reg: HashMap<String, Regex> = HashMap::new();
+
+    match conf.substrings {
+        Some(x) => substrings = x,
+        None => {}
+    }
+
+    match conf.regex {
+        Some(map) => {
+            for (k, v) in map {
+                let re = Regex::new(&*k).unwrap();
+                color_reg.insert(v, re);
+            }
+        },
+        None => {}
+    }
+
     for line in io::stdin().lock().lines() {
         let mut line = line.expect("Could not read line from standard in");
 
-        for k in conf.substrings.keys() {
-            line = line.replace(k, &*colorize(&*conf.substrings[k], k)?)
+        for (k, v) in &substrings {
+            line = line.replace(k, &*colorize(v, k)?)
+        }
+
+        for (k, v) in &color_reg {
+            let l = String::from(&line);
+            for cap in v.captures_iter(&*l) {
+                line = line.replace(&cap[0], &*colorize(&*k, &cap[0])?)
+            }
         }
 
         writeln!(&mut buff, "{}", line).ok();

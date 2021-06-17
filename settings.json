@@ -4,6 +4,9 @@
       "info": "GREEN",
       "debug": "BLUE",
       "error": "RED"
+    },
+    "regex": {
+      "(\\d{4})-(\\d{2})-(\\d{2})": "PURPLE"
     }
   },
   "profile1": {
