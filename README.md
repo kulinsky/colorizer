@@ -1,8 +1,8 @@
 # Colorizer  
 
-**it is a program for coloring any word in the input file displayed in your terminal**  
+**A tool for highlighting words in your terminal**  
 
-https://user-images.githubusercontent.com/794932/122374294-eaefd000-cf6a-11eb-8794-5f520c0e91b8.mov
+https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-9939-06d0b9601fbb.mov
 
 ## Install
 ```cargo install colorizer```
