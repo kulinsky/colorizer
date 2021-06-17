@@ -45,7 +45,7 @@ impl Config {
             .with_context(|| format!("Failed to parse json to object {}", &*args.config))?;
 
         let val = obj.get(&*args.profile)
-            .with_context(|| format!("profile not found `{}`", &*args.profile))?.clone();
+            .with_context(|| format!("Profile not found `{}`", &*args.profile))?.clone();
 
         let config = serde_json::from_value(val)?;
 
@@ -61,7 +61,7 @@ fn colorize(color: &str, word: &str) -> Result<String> {
         "CYAN" => Ok(Cyan.paint(word).to_string()),
         "YELLOW" => Ok(Yellow.paint(word).to_string()),
         "PURPLE" => Ok(Purple.paint(word).to_string()),
-        _ => Err(anyhow!("unknown color: {}", color))
+        _ => Err(anyhow!("Unknown color: {}", color))
     }
 }
 
