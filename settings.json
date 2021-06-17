@@ -6,7 +6,7 @@
       "error": "RED"
     }
   },
-  "logs": {
+  "profile1": {
     "substrings": {
       "null": "CYAN",
       "time": "YELLOW",
