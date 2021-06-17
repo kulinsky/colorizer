@@ -2,6 +2,8 @@
 
 **it is a program for coloring any word in the input file displayed in your terminal**  
 
+https://user-images.githubusercontent.com/794932/122374294-eaefd000-cf6a-11eb-8794-5f520c0e91b8.mov
+
 ## How to get and compile  
 ```
 git clone https://github.com/kulinsky/colorizer
