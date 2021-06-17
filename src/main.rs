@@ -81,7 +81,8 @@ fn main() -> Result<()> {
     match conf.regex {
         Some(map) => {
             for (k, v) in map {
-                let re = Regex::new(&*k).unwrap();
+                let re = Regex::new(&*k)
+                    .with_context(|| format!("Failed to parse regular expression `{}`", &*k))?;
                 color_reg.insert(v, re);
             }
         },
