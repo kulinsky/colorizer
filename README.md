@@ -10,7 +10,15 @@ cargo build --release
 ```
 
 ## How to use
-create a settings.json file and add a "substring" key which is a hash map of "word: color" like this:
+1. create a settings file and create one or more profiles  
+```
+{
+  "default": {},
+  "profile1": {}
+}
+```
+2. profile can have key "substrings", which is a hashmap with a key: the search word,  and a value: target color.
+3. profile can have key "regex", which is a hashmap with a key: the search regex,  and a value: target color.
 ```
 {
   "default": {
@@ -18,6 +26,9 @@ create a settings.json file and add a "substring" key which is a hash map of "wo
       "info": "GREEN",
       "debug": "BLUE",
       "error": "RED"
+    },
+    "regex": {
+      "(\\d{4})-(\\d{2})-(\\d{2})": "PURPLE"
     }
   },
   "profile1": {
