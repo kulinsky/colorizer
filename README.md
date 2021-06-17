@@ -4,6 +4,18 @@
 
 https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-9939-06d0b9601fbb.mov
 
+## Quickstart
+1. Download and change [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  
+2. Install colorizer and go
+```
+cargo install colorizer
+cat server.log | colorizer --config settings.json --profile profile1
+```  
+3. tail -f also work
+```
+tail -f server.log | colorizer  --config settings.json --profile profile1
+``` 
+
 ## Install
 ```cargo install colorizer```
 
