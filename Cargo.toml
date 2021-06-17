@@ -2,6 +2,7 @@
 name = "colorizer"
 version = "0.1.0"
 authors = ["Anton Kulinsky <ankulinsky@gmail.com>"]
+license = "MIT"
 description = "A tool for highlighting words in the terminal"
 readme = "README.md"
 homepage = "https://github.com/kulinsky/colorizer"
