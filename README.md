@@ -49,5 +49,5 @@ example is in the repository
 
 **now run the application**
 ```
-cat server.log | ./target/release/colorizer --config settings.json --profile profile1
+cat server.log | colorizer --config settings.json --profile profile1
 ```
