@@ -1,7 +1,7 @@
 use std::io;
 use std::fs::File;
 use std::collections::HashMap;
-use std::io::{BufRead, Read, Write};
+use std::io::{BufRead, Read};
 
 use clap::Clap;
 use regex::Regex;
@@ -12,7 +12,7 @@ use ansi_term::Colour::{Blue, Cyan, Yellow, Red, Green, Purple};
 
 /// Simple program to colorize any word
 #[derive(Clap, Debug)]
-#[clap(name = "colorizer", version = "0.1.0")]
+#[clap(name = "colorizer", version = "0.2.0")]
 struct CliConfig {
     /// Path to config.json file
     #[clap(short, long)]
@@ -67,8 +67,6 @@ fn colorize(color: &str, word: &str) -> Result<String> {
 
 fn main() -> Result<()> {
     let conf = Config::automatic()?;
-    let stdout = io::stdout();
-    let mut buff = io::BufWriter::new(stdout.lock());
 
     let mut substrings: HashMap<String, String> = HashMap::new();
     let mut color_reg: HashMap<String, Regex> = HashMap::new();
@@ -103,7 +101,7 @@ fn main() -> Result<()> {
             }
         }
 
-        writeln!(&mut buff, "{}", line).ok();
+        println!("{}", line);
     };
 
     Ok(())

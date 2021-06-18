@@ -11,6 +11,10 @@ https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-99
 cargo install colorizer
 cat server.log | colorizer --config settings.json --profile profile1
 ```
+3. tail also work
+```
+tail -f server.log | colorizer --config settings.json --profile profile1
+```
 
 ## Install
 ```cargo install colorizer```
