@@ -2,8 +2,6 @@
 
 **A tool for highlighting words in your terminal**  
 
-https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-9939-06d0b9601fbb.mov
-
 ## Quickstart
 1. Install
 ```
