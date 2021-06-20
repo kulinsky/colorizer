@@ -1,17 +1,18 @@
-use std::{io};
+use std::fs::File;
+use std::io;
 use std::io::{BufRead, Read};
-use std::fs::{File};
 
-use regex::Regex;
-use clap::{App, AppSettings, Arg};
+use ansi_term::Colour::{Black, Blue, Cyan, Green, Purple, Red, White, Yellow};
 use anyhow::{anyhow, Context, Result};
+use clap::{App, AppSettings, Arg};
+use regex::Regex;
 use serde_json::Value;
-use ansi_term::Colour::{Blue, Cyan, Yellow, Red, Green, Purple, Black, White};
 
 const DEFAULT_PROFILE: &str = "default";
 
 const EMAIL_REGEX: &str = r#"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"#;
-const IPV4_REGEX: &str = r#"(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"#;
+const IPV4_REGEX: &str =
+    r#"(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"#;
 const ISO_TIME_REGEX: &str = r#"(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)"#;
 
 fn colorize(color: &str, word: &str) -> Result<String> {
@@ -24,26 +25,30 @@ fn colorize(color: &str, word: &str) -> Result<String> {
         "YELLOW" => Ok(Yellow.paint(word).to_string()),
         "PURPLE" => Ok(Purple.paint(word).to_string()),
         "WHITE" => Ok(White.paint(word).to_string()),
-        _ => Err(anyhow!("Unknown color: {}", color))
+        _ => Err(anyhow!("Unknown color: {}", color)),
     }
 }
 
 fn parse_file(path: &str) -> Result<Value> {
     let mut buff = String::new();
 
-    let mut file = File::open(&path)
-        .with_context(|| format!("Failed to open config from: {}", &path))?;
+    let mut file =
+        File::open(&path).with_context(|| format!("Failed to open config from: {}", &path))?;
 
     file.read_to_string(&mut buff)
         .with_context(|| format!("Failed to read config file: {}", &path))?;
 
-    let parsed: Value = serde_json::from_str(&buff)
-        .with_context(|| format!("Failed to parse json: {}", &path))?;
+    let parsed: Value =
+        serde_json::from_str(&buff).with_context(|| format!("Failed to parse json: {}", &path))?;
 
     Ok(parsed)
 }
 
-fn process_line(mut line: String, substrings: &Vec<(&str, &str)>, color_reg: &Vec<(&str, Regex)>) -> Result<()> {
+fn process_line(
+    mut line: String,
+    substrings: &Vec<(&str, &str)>,
+    color_reg: &Vec<(&str, Regex)>,
+) -> Result<()> {
     for (k, v) in substrings {
         line = line.replace(*k, &*colorize(v, k)?)
     }
@@ -132,7 +137,8 @@ fn main() -> Result<()> {
         parsed = parse_file(path)?;
 
         if profiles.is_empty() {
-            let val = parsed.get(DEFAULT_PROFILE)
+            let val = parsed
+                .get(DEFAULT_PROFILE)
                 .with_context(|| format!("Profile not found: {}", DEFAULT_PROFILE))?;
 
             if let Some(subs) = val.get("substrings") {
@@ -142,12 +148,13 @@ fn main() -> Result<()> {
             }
             if let Some(r) = val.get("regex") {
                 for (k, v) in r.as_object().unwrap() {
-                    color_reg.push((k.as_str(), v.as_str().unwrap().parse()?))
+                    color_reg.push((v.as_str().unwrap(), k.parse()?))
                 }
             }
         } else {
             for p in profiles {
-                let val = parsed.get(p)
+                let val = parsed
+                    .get(p)
                     .with_context(|| format!("Profile not found: {}", p))?;
 
                 if let Some(r) = val.get("regex") {
@@ -170,7 +177,7 @@ fn main() -> Result<()> {
             for line in io::stdin().lock().lines() {
                 let line = line.expect("Could not read line from standard in");
                 process_line(line, &substrings, &color_reg)?;
-            };
+            }
         }
         Some(filename) => {
             let file = File::open(filename)
@@ -179,7 +186,7 @@ fn main() -> Result<()> {
             for line in io::BufReader::new(file).lines() {
                 let line = line.expect("Could not read line from standard in");
                 process_line(line, &substrings, &color_reg)?;
-            };
+            }
         }
     };
 
