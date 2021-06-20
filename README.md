@@ -5,15 +5,27 @@
 https://user-images.githubusercontent.com/794932/122381654-d531d900-cf71-11eb-9939-06d0b9601fbb.mov
 
 ## Quickstart
-1. Download and change [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  
-2. Install colorizer and run
+1. Install
 ```
 cargo install colorizer
-cat server.log | colorizer --config settings.json --profile profile1
+```
+2. There are built-in regular expressions, you can start using them without config
+```
+//via pipe
+cat server.log | colorizer --email YELLOW --ipv4 RED --isotime CYAN
+
+// or file as arg
+colorizer server.log --email YELLOW --ipv4 RED --isotime CYAN
+```
+
+3. Create or Download [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  and create one or more profiles, the profile with the name "default" is used if you do not pass the names of the profiles as arguments
+4. You can use multiple profiles
+```
+cat server.log | colorizer --config settings.json -p prof1 prof2 prof3
 ```
 3. tail also work
 ```
-tail -f server.log | colorizer --config settings.json --profile profile1
+tail -f server.log | colorizer --isotime CYAN
 ```
 
 ## Install
@@ -28,6 +40,7 @@ cargo build --release
 
 ## How to use
 1. create a settings file and create one or more profiles  
+   available colors: BLACK, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE, WHITE  
 ```
 {
   "default": {},
@@ -57,7 +70,7 @@ cargo build --release
   }
 }
 ```
-example is in the repository  
+example is in the repository
 
 **now run the application**
 ```
