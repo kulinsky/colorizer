@@ -9,7 +9,7 @@ cargo install colorizer
 ```
 2. There are built-in regular expressions, you can start using them without config
 ```
-//via pipe
+// via pipe
 cat server.log | colorizer --email YELLOW --ipv4 RED --isotime CYAN
 
 // or file as arg
