@@ -16,12 +16,14 @@ cat server.log | colorizer --email YELLOW --ipv4 RED --isotime CYAN
 colorizer server.log --email YELLOW --ipv4 RED --isotime CYAN
 ```
 
-3. Create or Download [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  and create one or more profiles, the profile with the name "default" is used if you do not pass the names of the profiles as arguments
+3. Create or Download [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  and create one or more profiles, the profile with the name "default" is used if you do not pass the names of the profiles as arguments  
+  
 4. You can use multiple profiles
 ```
 cat server.log | colorizer --config settings.json -p prof1 prof2 prof3
 ```
-3. tail also work
+  
+5. tail also work
 ```
 tail -f server.log | colorizer --isotime CYAN
 ```
