@@ -32,8 +32,8 @@ fn colorize(color: &str, word: &str) -> Result<String> {
     }
 }
 
-fn get_built_in() -> Result<Value> {
-    Ok(json!({
+fn get_built_in() -> Value {
+    json!({
         "nginx": {
             "regex": {
                 "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)": "ORANGE",
@@ -43,7 +43,7 @@ fn get_built_in() -> Result<Value> {
                 "[\"]([\\S]*)[\"] [\"]([\\S\\s]+)[\"]": "CYAN"
             }
         }
-    }))
+    })
 }
 
 fn parse_file(path: &str) -> Result<Value> {
@@ -152,7 +152,7 @@ fn main() -> Result<()> {
 
     match matches.value_of("config") {
         None => {
-            parsed = get_built_in()?;
+            parsed = get_built_in();
         }
         Some(path) => {
             parsed = parse_file(path)?;
