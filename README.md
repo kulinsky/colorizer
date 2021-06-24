@@ -7,7 +7,13 @@
 ```
 cargo install colorizer
 ```
-2. There are built-in regular expressions, you can start using them without config
+2. There are built-in profiles, currently only one (nginx) :)
+```
+// via pipe
+cat access.log | colorizer -p nginx
+```
+
+3. There are built-in regular expressions, you can start using them without config
 ```
 // via pipe
 cat server.log | colorizer --email YELLOW --ipv4 RED --isotime CYAN
@@ -16,16 +22,16 @@ cat server.log | colorizer --email YELLOW --ipv4 RED --isotime CYAN
 colorizer server.log --email YELLOW --ipv4 RED --isotime CYAN
 ```
 
-3. Create or Download [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  and create one or more profiles, the profile with the name "default" is used if you do not pass the names of the profiles as arguments  
+4. Create or Download [settings.json](https://github.com/kulinsky/colorizer/blob/master/settings.json)  and create one or more profiles, the profile with the name "default" is used if you do not pass the names of the profiles as arguments  
   
-4. You can use multiple profiles
+5. You can use multiple profiles
 ```
 cat server.log | colorizer --config settings.json -p prof1 prof2 prof3
 ```
   
-5. tail also work
+6. tail also work
 ```
-tail -f server.log | colorizer --isotime CYAN
+tail -f access.log | colorizer -p nginx
 ```
 
 ## Install
@@ -40,7 +46,7 @@ cargo build --release
 
 ## How to use
 1. create a settings file and create one or more profiles  
-   available colors: BLACK, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE, WHITE  
+   available colors: BLACK, RED, GREEN, BLUE, CYAN, YELLOW, PURPLE, WHITE, FORESTGREEN, MAGENTA, ORANGE  
 ```
 {
   "default": {},
