@@ -2,11 +2,11 @@ use std::fs::File;
 use std::io;
 use std::io::{BufRead, Read};
 
-use ansi_term::Colour::{Black, Blue, Cyan, Green, Purple, Red, White, Yellow};
+use ansi_term::Colour::{Black, Blue, Cyan, Green, Purple, Red, White, Yellow, Fixed};
 use anyhow::{anyhow, Context, Result};
 use clap::{App, AppSettings, Arg};
 use regex::Regex;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 const DEFAULT_PROFILE: &str = "default";
 
@@ -25,8 +25,25 @@ fn colorize(color: &str, word: &str) -> Result<String> {
         "YELLOW" => Ok(Yellow.paint(word).to_string()),
         "PURPLE" => Ok(Purple.paint(word).to_string()),
         "WHITE" => Ok(White.paint(word).to_string()),
+        "FORESTGREEN" => Ok(Fixed(022).paint(word).to_string()),
+        "MAGENTA" => Ok(Fixed(200).paint(word).to_string()),
+        "ORANGE" => Ok(Fixed(214).paint(word).to_string()),
         _ => Err(anyhow!("Unknown color: {}", color)),
     }
+}
+
+fn get_built_in() -> Result<Value> {
+    Ok(json!({
+        "nginx": {
+            "regex": {
+                "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)": "ORANGE",
+                "\\[([\\s\\S]+)\\]": "CYAN",
+                "\"([A-Z]+) ([\\S]*) ([\\S]+)[\"]": "FORESTGREEN",
+                " (\\d{3}) ": "MAGENTA",
+                "[\"]([\\S]*)[\"] [\"]([\\S\\s]+)[\"]": "CYAN"
+            }
+        }
+    }))
 }
 
 fn parse_file(path: &str) -> Result<Value> {
@@ -133,40 +150,45 @@ fn main() -> Result<()> {
 
     let parsed: Value;
 
-    if let Some(path) = matches.value_of("config") {
-        parsed = parse_file(path)?;
+    match matches.value_of("config") {
+        None => {
+            parsed = get_built_in()?;
+        }
+        Some(path) => {
+            parsed = parse_file(path)?;
+        }
+    }
 
-        if profiles.is_empty() {
-            let val = parsed
-                .get(DEFAULT_PROFILE)
-                .with_context(|| format!("Profile not found: {}", DEFAULT_PROFILE))?;
+    if profiles.is_empty() {
+        let val = parsed
+            .get(DEFAULT_PROFILE)
+            .with_context(|| format!("Profile not found: {}", DEFAULT_PROFILE))?;
 
-            if let Some(subs) = val.get("substrings") {
-                for (k, v) in subs.as_object().unwrap() {
-                    substrings.push((*&k, v.as_str().unwrap().clone()))
-                }
+        if let Some(subs) = val.get("substrings") {
+            for (k, v) in subs.as_object().unwrap() {
+                substrings.push((*&k, v.as_str().unwrap().clone()))
             }
+        }
+        if let Some(r) = val.get("regex") {
+            for (k, v) in r.as_object().unwrap() {
+                color_reg.push((v.as_str().unwrap(), k.parse()?))
+            }
+        }
+    } else {
+        for p in profiles {
+            let val = parsed
+                .get(p)
+                .with_context(|| format!("Profile not found: {}", p))?;
+
             if let Some(r) = val.get("regex") {
                 for (k, v) in r.as_object().unwrap() {
                     color_reg.push((v.as_str().unwrap(), k.parse()?))
                 }
             }
-        } else {
-            for p in profiles {
-                let val = parsed
-                    .get(p)
-                    .with_context(|| format!("Profile not found: {}", p))?;
 
-                if let Some(r) = val.get("regex") {
-                    for (k, v) in r.as_object().unwrap() {
-                        color_reg.push((v.as_str().unwrap(), k.parse()?))
-                    }
-                }
-
-                if let Some(r) = val.get("substrings") {
-                    for (k, v) in r.as_object().unwrap() {
-                        substrings.push((k.as_str(), v.as_str().unwrap()))
-                    }
+            if let Some(r) = val.get("substrings") {
+                for (k, v) in r.as_object().unwrap() {
+                    substrings.push((k.as_str(), v.as_str().unwrap()))
                 }
             }
         }
