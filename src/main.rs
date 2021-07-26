@@ -25,7 +25,7 @@ fn colorize(color: &str, word: &str) -> Result<String> {
         "YELLOW" => Ok(Yellow.paint(word).to_string()),
         "PURPLE" => Ok(Purple.paint(word).to_string()),
         "WHITE" => Ok(White.paint(word).to_string()),
-        "FORESTGREEN" => Ok(Fixed(022).paint(word).to_string()),
+        "FORESTGREEN" => Ok(Fixed(22).paint(word).to_string()),
         "MAGENTA" => Ok(Fixed(200).paint(word).to_string()),
         "ORANGE" => Ok(Fixed(214).paint(word).to_string()),
         _ => Err(anyhow!("Unknown color: {}", color)),
@@ -63,8 +63,8 @@ fn parse_file(path: &str) -> Result<Value> {
 
 fn process_line(
     mut line: String,
-    substrings: &Vec<(&str, &str)>,
-    color_reg: &Vec<(&str, Regex)>,
+    substrings: &[(&str, &str)],
+    color_reg: &[(&str, Regex)],
 ) -> Result<()> {
     for (k, v) in substrings {
         line = line.replace(*k, &*colorize(v, k)?)
@@ -166,7 +166,7 @@ fn main() -> Result<()> {
 
         if let Some(subs) = val.get("substrings") {
             for (k, v) in subs.as_object().unwrap() {
-                substrings.push((*&k, v.as_str().unwrap().clone()))
+                substrings.push((k, <&str>::clone(&v.as_str().unwrap())))
             }
         }
         if let Some(r) = val.get("regex") {
