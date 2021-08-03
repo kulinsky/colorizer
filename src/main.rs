@@ -84,7 +84,7 @@ fn process_line(
 fn main() -> Result<()> {
     let matches = App::new("Colorizer")
         .setting(AppSettings::ColoredHelp)
-        .version("1.1.0")
+        .version("1.1.2")
         .about("Program to colorize any word.")
         .arg(Arg::new("INPUT")
             .about("Sets the input file to use")
