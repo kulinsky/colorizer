@@ -73,7 +73,7 @@ fn process_line(
     for (k, v) in color_reg {
         let l = String::from(&line);
         for cap in v.captures_iter(&*l) {
-            line = line.replace(&cap[0], &*colorize(&*k, &cap[0])?)
+            line = line.replace(&cap[0], &*colorize(*k, &cap[0])?)
         }
     }
 
@@ -160,18 +160,20 @@ fn main() -> Result<()> {
     }
 
     if profiles.is_empty() {
-        let val = parsed
-            .get(DEFAULT_PROFILE)
-            .with_context(|| format!("Profile not found: {}", DEFAULT_PROFILE))?;
+        if matches.value_of("config").is_some() {
+            let val = parsed
+                .get(DEFAULT_PROFILE)
+                .with_context(|| format!("Profile not found: {}", DEFAULT_PROFILE))?;
 
-        if let Some(subs) = val.get("substrings") {
-            for (k, v) in subs.as_object().unwrap() {
-                substrings.push((k, <&str>::clone(&v.as_str().unwrap())))
+            if let Some(subs) = val.get("substrings") {
+                for (k, v) in subs.as_object().unwrap() {
+                    substrings.push((k, <&str>::clone(&v.as_str().unwrap())))
+                }
             }
-        }
-        if let Some(r) = val.get("regex") {
-            for (k, v) in r.as_object().unwrap() {
-                color_reg.push((v.as_str().unwrap(), k.parse()?))
+            if let Some(r) = val.get("regex") {
+                for (k, v) in r.as_object().unwrap() {
+                    color_reg.push((v.as_str().unwrap(), k.parse()?))
+                }
             }
         }
     } else {
