@@ -28,7 +28,7 @@ struct Args {
     iso_time: bool,
 
     /// regex pattern to find and colorize
-    #[arg(num_args(0..))]
+    #[arg(short, long, num_args(0..))]
     pattern: Vec<String>,
 }
 
