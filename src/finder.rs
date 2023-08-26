@@ -20,11 +20,9 @@ impl Finder for RegexFinder {
     fn find(&self, s: &str) -> Vec<String> {
         let mut results = vec![];
 
-        for r in self.patterns.iter() {
-            for c in r.captures_iter(s) {
-                results.push(c[0].to_string());
-            }
-        }
+        self.patterns
+            .iter()
+            .for_each(|r| results.extend(r.find_iter(s).map(|m| m.as_str().to_string())));
 
         results
     }
