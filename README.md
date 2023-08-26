@@ -28,7 +28,7 @@ cat access.log | colorizer --email --ipv4 --isotime
 ```bash
 echo "hello world" | colorizer --color red --pattern world
 
-echo "hello world" | ./target/release/colorizer --pattern "\w+r\w+" --color green
+echo "hello world" | colorizer --pattern "\w+r\w+" --color green
 ```
 
 4. tail also work
