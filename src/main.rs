@@ -15,6 +15,10 @@ const ISO_TIME_REGEX: &str = r#"(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
+    /// color to use for highlighting
+    #[arg(short, long, default_value = "red")]
+    color: String,
+
     /// find and colorize emails
     #[arg(short, long, default_value_t = false)]
     email: bool,
@@ -35,16 +39,21 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    for x in args.pattern {
-        println!("pattern: {}", x);
-    }
+    let mut patterns = args.pattern;
 
-    let mut patterns = Vec::new();
     if args.email {
         patterns.push(EMAIL_REGEX.to_string());
     }
 
-    let console_colorizer = colorizer::ConsoleColorizer::new();
+    if args.ipv4 {
+        patterns.push(IPV4_REGEX.to_string());
+    }
+
+    if args.iso_time {
+        patterns.push(ISO_TIME_REGEX.to_string());
+    }
+
+    let console_colorizer = colorizer::ConsoleColorizer::new(Some(args.color));
 
     let regex_finder = finder::RegexFinder::new(patterns);
 

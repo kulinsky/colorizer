@@ -27,7 +27,7 @@ where
         let matches = self.finder.find(s);
 
         for m in matches.iter() {
-            result = result.replace(m, &self.colorizer.red(m))
+            result = result.replace(m, &self.colorizer.paint(m))
         }
 
         result
@@ -35,15 +35,13 @@ where
 }
 
 mod tests {
-    
-
-    
-    
+    use super::*;
+    use crate::{colorizer::ConsoleColorizer, finder::RegexFinder, processor::TextProcessor};
 
     #[test]
     fn happy_path() {
         // Arrange
-        let c = ConsoleColorizer::new();
+        let c = ConsoleColorizer::default();
         let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
         let processor = TextProcessor::new(c, f);
         let input = "foo bar baz";
@@ -53,6 +51,22 @@ mod tests {
 
         // Assert
         let expected = "\x1b[31mfoo\x1b[0m \x1b[31mbar\x1b[0m baz";
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn paint_to_blue() {
+        // Arrange
+        let c = ConsoleColorizer::new(Some("blue".to_string()));
+        let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
+        let processor = TextProcessor::new(c, f);
+        let input = "foo bar baz";
+
+        // Act
+        let actual = processor.process_line(input);
+
+        // Assert
+        let expected = "\x1b[34mfoo\x1b[0m \x1b[34mbar\x1b[0m baz";
         assert_eq!(actual, expected);
     }
 }
