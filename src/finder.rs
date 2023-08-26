@@ -31,7 +31,7 @@ impl Finder for RegexFinder {
 }
 
 mod tests {
-    use super::*;
+    
 
     #[test]
     fn happy_path() {

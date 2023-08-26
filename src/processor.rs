@@ -35,10 +35,10 @@ where
 }
 
 mod tests {
-    use super::*;
+    
 
-    use crate::colorizer::ConsoleColorizer;
-    use crate::finder::RegexFinder;
+    
+    
 
     #[test]
     fn happy_path() {
