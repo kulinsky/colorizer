@@ -31,7 +31,8 @@ impl Finder for RegexFinder {
 }
 
 mod tests {
-    
+    use super::*;
+    use crate::finder::RegexFinder;
 
     #[test]
     fn happy_path() {
