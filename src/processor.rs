@@ -21,22 +21,20 @@ where
         }
     }
 
-    pub fn process_line(&self, s: &str) -> String {
-        let mut result = s.to_string();
-
-        let matches = self.finder.find(s);
+    pub fn process_line(&self, mut s: String) -> String {
+        let matches = self.finder.find(&s);
 
         for m in matches.iter() {
-            result = result.replace(m, &self.colorizer.paint(m))
+            s = s.replace(m, &self.colorizer.paint(m))
         }
 
-        result
+        s
     }
 }
 
 mod tests {
     use super::*;
-    use crate::{colorizer::ConsoleColorizer, finder::RegexFinder, processor::TextProcessor};
+    use crate::{colorizer::ConsoleColorizer, finder::RegexFinder};
 
     #[test]
     fn happy_path() {
@@ -44,7 +42,7 @@ mod tests {
         let c = ConsoleColorizer::default();
         let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
         let processor = TextProcessor::new(c, f);
-        let input = "foo bar baz";
+        let input = "foo bar baz".to_string();
 
         // Act
         let actual = processor.process_line(input);
@@ -60,7 +58,7 @@ mod tests {
         let c = ConsoleColorizer::new(Some("blue".to_string()));
         let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
         let processor = TextProcessor::new(c, f);
-        let input = "foo bar baz";
+        let input = "foo bar baz".to_string();
 
         // Act
         let actual = processor.process_line(input);

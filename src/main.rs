@@ -62,7 +62,7 @@ fn main() {
     let stdin = io::stdin();
 
     for line in stdin.lock().lines() {
-        let res = processor.process_line(line.as_ref().unwrap());
+        let res = processor.process_line(line.unwrap());
         println!("{}", res);
     }
 }
