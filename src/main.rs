@@ -11,7 +11,7 @@ const IPV4_REGEX: &str =
     r#"(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"#;
 const ISO_TIME_REGEX: &str = r#"(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)"#;
 
-/// Simple program to greet a person
+/// Simple program highlight words in terminal
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
