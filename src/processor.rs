@@ -1,31 +1,23 @@
-use crate::{colorizer::Colorizer, finder::Finder};
+use ansi_term::Color;
+use regex::Regex;
 
-pub struct TextProcessor<C, F>
-where
-    C: Colorizer,
-    F: Finder,
-{
-    colorizer: C,
-    finder: F,
+pub struct TextProcessor {
+    patterns: Vec<(Color, Regex)>,
 }
 
-impl<C, F> TextProcessor<C, F>
-where
-    C: Colorizer,
-    F: Finder,
-{
-    pub fn new(c: C, f: F) -> Self {
-        Self {
-            colorizer: c,
-            finder: f,
-        }
+impl TextProcessor {
+    pub fn new(patterns: Vec<(Color, Regex)>) -> Self {
+        Self { patterns }
     }
 
     pub fn process_line(&self, mut s: String) -> String {
-        let matches = self.finder.find(&s);
-
-        for m in matches.iter() {
-            s = s.replace(m, &self.colorizer.paint(m))
+        for (color, regex) in &self.patterns {
+            s = regex
+                .replace_all(
+                    &s,
+                    format!("{}$0{}", color.prefix(), color.suffix()).as_str(),
+                )
+                .to_string();
         }
 
         s
@@ -35,37 +27,19 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{colorizer::ConsoleColorizer, finder::RegexFinder};
 
     #[test]
     fn happy_path() {
         // Arrange
-        let c = ConsoleColorizer::default();
-        let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
-        let processor = TextProcessor::new(c, f);
+        let patterns = vec![(Color::Red, Regex::new("foo").unwrap())];
+        let processor = TextProcessor::new(patterns);
         let input = "foo bar baz".to_string();
 
         // Act
         let actual = processor.process_line(input);
 
         // Assert
-        let expected = "\x1b[31mfoo\x1b[0m \x1b[31mbar\x1b[0m baz";
-        assert_eq!(actual, expected);
-    }
-
-    #[test]
-    fn paint_to_blue() {
-        // Arrange
-        let c = ConsoleColorizer::new(Some("blue".to_string()));
-        let f = RegexFinder::new(vec!["foo".to_string(), "bar".to_string()]);
-        let processor = TextProcessor::new(c, f);
-        let input = "foo bar baz".to_string();
-
-        // Act
-        let actual = processor.process_line(input);
-
-        // Assert
-        let expected = "\x1b[34mfoo\x1b[0m \x1b[34mbar\x1b[0m baz";
+        let expected = "\x1b[31mfoo\x1b[0m bar baz";
         assert_eq!(actual, expected);
     }
 }
