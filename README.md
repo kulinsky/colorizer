@@ -84,4 +84,6 @@ profiles:
       - ".*"
 ```
 
+In this repository, you can find a `config.yml` file that includes a profile named `golang-test` for syntax highlighting in Go tests using the `colorizer` tool.
+
 Enjoy using Colorizer and add some color to your terminal experience!
