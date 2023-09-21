@@ -29,6 +29,8 @@ You can install Colorizer using the following command:
 $ cargo install colorizer
 ```
 
+Alternatively, you can download precompiled binaries from the [Releases](https://github.com/kulinsky/colorizer/releases) section.
+
 ## Examples
 
 ### Example 1
