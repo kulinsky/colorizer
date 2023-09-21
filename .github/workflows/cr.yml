@@ -159,12 +159,12 @@
             repo_token: "${{ secrets.GITHUB_TOKEN }}",
             prerelease: false,
             files: "\
-              ./arty/patch-json-windows.exe\n\
-              ./arty/patch-json-aarch64-macos\n\
-              ./arty/patch-json-amd64-macos\n\
-              ./arty/patch-json-aarch64-linux\n\
-              ./arty/patch-json-armv7-linux\n\
-              ./arty/patch-json-amd64-linux\n\
+              ./arty/colorizer-windows.exe\n\
+              ./arty/colorizer-aarch64-macos\n\
+              ./arty/colorizer-amd64-macos\n\
+              ./arty/colorizer-aarch64-linux\n\
+              ./arty/colorizer-armv7-linux\n\
+              ./arty/colorizer-amd64-linux\n\
             ",
           },
         },
