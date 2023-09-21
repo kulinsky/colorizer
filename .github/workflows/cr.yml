@@ -80,12 +80,6 @@
               features: default,
             },
             {
-              target: "wasm32-wasi",
-              exe: "wasi.wasm",
-              os: "ubuntu-latest",
-              features: "",
-            },
-            {
               target: "x86_64-apple-darwin",
               exe: "amd64-macos",
               os: "macos-latest",
@@ -165,7 +159,6 @@
             repo_token: "${{ secrets.GITHUB_TOKEN }}",
             prerelease: false,
             files: "\
-              ./arty/patch-json-wasi.wasm\n\
               ./arty/patch-json-windows.exe\n\
               ./arty/patch-json-aarch64-macos\n\
               ./arty/patch-json-amd64-macos\n\
