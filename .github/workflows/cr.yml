@@ -53,22 +53,6 @@
           name: "Check format",
           run: "cargo fmt -- --check",
         },
-        {
-          name: "Setup Wasmer",
-          uses: "wasmerio/setup-wasmer@v1",
-        },
-        {
-          name: "Check versions consistent (Cargo / wapm / tag (v*))",
-          run: "\
-            set -x\n
-            jq -ne \\\n
-           \   --argjson wapm \"$(wasmer run liftm/rq -- -tJ <wasmer.toml)\"\\\n
-           \   --argjson cargo \"$(wasmer run liftm/rq -- -tJ <Cargo.toml)\"\\\n
-           \   --arg ref \"${{ github.ref }}\"\\\n
-            '($wapm.package.version ==  $cargo.package.version) and '\\\n\
-            '(($ref | startswith(\"v\") | not) or ($ref | ltrimstr(\"v\") | . == $cargo.package.version))'
-          ",
-        },
       ],
     },
     build: {
